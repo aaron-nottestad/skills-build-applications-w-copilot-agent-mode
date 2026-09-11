@@ -2,13 +2,13 @@ import { useEffect, useState } from 'react'
 import { getCollectionItems } from '../api.js'
 
 const codespaceName = import.meta.env.VITE_CODESPACE_NAME?.trim()
-const apiBasePath = codespaceName ? `https://${codespaceName}-8000.app.github.dev` : 'http://localhost:8000'
+const apiBasePath = codespaceName ? `https://${codespaceName}-8000.app.github.dev/api/users/` : 'http://localhost:8000/api/users/'
 
 function Users() {
   const [users, setUsers] = useState([])
   const [error, setError] = useState('')
   useEffect(() => {
-    fetch(`${apiBasePath}/api/users/`).then((response) => {
+    fetch(`${apiBasePath}`).then((response) => {
       if (!response.ok) throw new Error(`Unable to load users (${response.status})`)
       return response.json()
     }).then((payload) => setUsers(getCollectionItems(payload))).catch((loadError) => setError(loadError.message))
