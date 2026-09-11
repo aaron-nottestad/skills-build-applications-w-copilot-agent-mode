@@ -1,10 +1,18 @@
 import { useEffect, useState } from 'react'
-import { getCollection } from '../api.js'
+import { getCollectionItems } from '../api.js'
+
+const codespaceName = import.meta.env.VITE_CODESPACE_NAME?.trim()
+const apiBasePath = codespaceName ? `https://${codespaceName}-8000.app.github.dev` : 'http://localhost:8000'
 
 function Teams() {
   const [teams, setTeams] = useState([])
   const [error, setError] = useState('')
-  useEffect(() => { getCollection('teams').then(setTeams).catch((loadError) => setError(loadError.message)) }, [])
+  useEffect(() => {
+    fetch(`${apiBasePath}/api/teams/`).then((response) => {
+      if (!response.ok) throw new Error(`Unable to load teams (${response.status})`)
+      return response.json()
+    }).then((payload) => setTeams(getCollectionItems(payload))).catch((loadError) => setError(loadError.message))
+  }, [])
   return <CollectionPage eyebrow="Your crew" title="Teams" intro="Find your people and keep moving." error={error} empty="No teams created yet."><div className="tile-grid">{teams.map((team, index) => <article className="team-tile" key={team._id || team.id || index}><span className="tile-number">{String(index + 1).padStart(2, '0')}</span><h2>{team.name || `Team ${index + 1}`}</h2><p>{team.members?.length || team.memberCount || 0} members</p><span className="tile-link">View team →</span></article>)}</div></CollectionPage>
 }
 
