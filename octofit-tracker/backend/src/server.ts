@@ -38,3 +38,4 @@ for (const [path, model] of collectionRoutes) {
 app.listen(port, () => {
   console.log(`OctoFit Tracker API listening at ${apiBaseUrl}`);
 });
+
