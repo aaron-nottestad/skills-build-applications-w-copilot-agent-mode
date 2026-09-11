@@ -1,4 +1,5 @@
 import express from 'express';
+import './config/database.js';
 import { Activity, Leaderboard, Team, User, Workout } from './models.js';
 
 const app = express();
